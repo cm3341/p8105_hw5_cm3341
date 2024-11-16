@@ -222,6 +222,14 @@ prop_test_baltimore =
   x = homs_baltimore$unsolved_homicides,
   n = homs_baltimore$total_homicides
 ) %>% 
-  broom::tidy()
+  broom::tidy() 
+
+prop_test_table = 
+  prop_test_baltimore%>% 
+  mutate(estimate_prop = exp(estimate)) %>% 
+  select(estimate_prop, conf.low, conf.high) %>% 
+  knitr::kable(digits = 3)
+
+prop_test_table
 ```
 
