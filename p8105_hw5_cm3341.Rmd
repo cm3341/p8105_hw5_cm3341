@@ -92,7 +92,7 @@ sim_mean_sd = function(n = 30, mu, sigma = 5) {
 ```
 
 Now I simulate 
-```{r, eval = FALSE}
+```{r}
 output = vector("list", 5000)
 
 for (i in 1:5000) {
@@ -166,12 +166,7 @@ Import data after downloading the csv file from github. Clean and tidy data.
 
 ```{r}
 hom_data = 
-  read_csv("data/homicide-data.csv") %>%  
-  mutate(
-    resolved = as.numeric(disposition == "Closed by arrest"),
-    victim_age = as.numeric(victim_age),
-    victim_race = fct_relevel(victim_race, "White")) |> 
-  select(resolved, victim_age, victim_race, victim_sex)
+  read_csv("data/homicide-data.csv")
 ```
 
 This dataset contains observations for 52,000 homicides across 50 of the US's largest cities. Data is from the past decade. The dataset includes demographic variables about victims (i.e., name, age, rage, sex), along with date and location information for where the homicide took place, and whether an arrest took place. 
