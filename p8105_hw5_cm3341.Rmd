@@ -235,13 +235,47 @@ prop_test_baltimore =
     upper_ci = conf.high
   )
 
-prop_test_baltimore
+knitr::kable(prop_test_baltimore)
 ```
 
 Prop.test for all cities
 
 ```{r}
+prop_test_all_cities = 
+  homs_by_city %>%
+  mutate(
+    prop_test = map2(
+      unsolved_homicides, homicides, \(unsolved, total) {
+        prop.test(x = unsolved, n = total) %>% broom::tidy()
+      }
+    )
+  ) %>%
+  unnest(cols = c(prop_test)) %>%
+  select(city_state, estimate, conf.low, conf.high) %>%
+  rename(
+    proportion_unsolved = estimate,
+    lower_ci = conf.low,
+    upper_ci = conf.high
+  )
 
+knitr::kable(prop_test_all_cities)
+```
 
+Plot that shows the estimates and CIs for each city 
+
+```{r}
+prop_test_all_cities %>%
+  mutate(city_state = fct_reorder(city_state, proportion_unsolved)) %>%
+  ggplot(aes(x = city_state, y = proportion_unsolved)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = lower_ci, ymax = upper_ci), width = 0.2) +
+  labs(
+    title = "Prop of Unsolved Homicides/City",
+    x = "City",
+    y = "Prop of Unsolved Homicides") +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    plot.title = element_text(hjust = 0.5)
+  )
 ```
 
